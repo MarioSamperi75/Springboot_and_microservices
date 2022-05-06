@@ -26,14 +26,20 @@ public class UserResource {
 	
 	@GetMapping("/users/{id}")
 	public User retrieveUser (@PathVariable int id) {
-		return service.findOne(id);
+		User user = service.findOne(id);
+		
+		if (user == null) {
+			throw new UserNotFoundException("id-" + id);
+		}
+		
+		return user;
 	}
 	
 	@PostMapping("/users")
 	public ResponseEntity<Object> retrieveUser (@RequestBody User user) {
 		User savedUser = service.saveUser(user);
 		
-		//adding CREATED and the path as response
+		//return 201 CREATED and the path as response
 		URI location = ServletUriComponentsBuilder
 			.fromCurrentRequest()
 			.path("/{id}")

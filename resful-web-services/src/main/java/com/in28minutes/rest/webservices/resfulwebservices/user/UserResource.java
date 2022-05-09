@@ -3,8 +3,15 @@ package com.in28minutes.rest.webservices.resfulwebservices.user;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,19 +37,28 @@ public class UserResource {
 		return users;
 	}
 	
+	// hateoas: we will return not just a user but an EntityModel
+	// EntityModel = user + link to other data 	
 	@GetMapping("/users/{id}")
-	public User retrieveUser (@PathVariable int id) {
+	public EntityModel<User> retrieveUser (@PathVariable int id) {
 		User user = service.findOne(id);
 		
 		if (user == null) {
 			throw new UserNotFoundException("id-" + id);
 		}
+		// create EntityModel, create the Link, add the link to the EntityModel
+		EntityModel<User> model = EntityModel.of(user);
 		
-		return user;
+		// intead of hardcoding "/users" we get the link to a specific method in the actual class
+		WebMvcLinkBuilder linkToUsers = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+		
+		// all-users is the name we want to show
+		model.add(linkToUsers.withRel("all-users"));
+		return model;
 	}
 	
 	@PostMapping("/users")
-	public ResponseEntity<Object> postUser (@RequestBody User user) {
+	public ResponseEntity<Object> createUser (@Valid @RequestBody User user) {
 		
 		User alreadyExistingUser = service.findByName(user.getName());
 		

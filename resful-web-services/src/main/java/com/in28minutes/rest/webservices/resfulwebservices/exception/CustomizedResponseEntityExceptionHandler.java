@@ -11,6 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.in28minutes.rest.webservices.resfulwebservices.user.ExistingUserException;
 import com.in28minutes.rest.webservices.resfulwebservices.user.UserNotFoundException;
 
 @ControllerAdvice // to apply this to all controllers
@@ -34,5 +35,12 @@ extends ResponseEntityExceptionHandler{
 		return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(ExistingUserException.class)
+	public final ResponseEntity<Object> handleExistingUsrException
+	(ExistingUserException ex, WebRequest request){
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+		
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
 
 }

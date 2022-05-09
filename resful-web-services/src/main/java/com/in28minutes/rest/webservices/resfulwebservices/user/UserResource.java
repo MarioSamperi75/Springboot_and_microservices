@@ -21,7 +21,12 @@ public class UserResource {
 	
 	@GetMapping("/users")
 	public List<User> retrieveAllUsers() {
-		return service.findAll();
+		List<User> users = service.findAll();
+		
+		if (users.size() == 0) {
+			throw new UserNotFoundException("No users found in the database");
+		}
+		return users;
 	}
 	
 	@GetMapping("/users/{id}")
@@ -37,6 +42,13 @@ public class UserResource {
 	
 	@PostMapping("/users")
 	public ResponseEntity<Object> retrieveUser (@RequestBody User user) {
+		
+		User alreadyExistingUser = service.findByName(user.getName());
+		
+		if (alreadyExistingUser != null) {
+			throw new ExistingUserException("Already Existing User");
+		}
+		
 		User savedUser = service.saveUser(user);
 		
 		//return 201 CREATED and the path as response

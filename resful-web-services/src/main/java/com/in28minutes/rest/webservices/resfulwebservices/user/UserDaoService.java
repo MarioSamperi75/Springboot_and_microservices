@@ -39,4 +39,14 @@ public class UserDaoService {
 		}
 		return null;
 	}
+	
+	public User findByName(String name) {
+		for (User user:users) {
+			if (user.getName().equals(name)) {
+				return user;
+			}
+		}
+		return null;
+	}
+	
  }

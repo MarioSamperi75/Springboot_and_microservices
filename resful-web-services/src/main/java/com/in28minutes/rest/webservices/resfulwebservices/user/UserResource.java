@@ -41,7 +41,7 @@ public class UserResource {
 	}
 	
 	@PostMapping("/users")
-	public ResponseEntity<Object> retrieveUser (@RequestBody User user) {
+	public ResponseEntity<Object> postUser (@RequestBody User user) {
 		
 		User alreadyExistingUser = service.findByName(user.getName());
 		
@@ -60,7 +60,44 @@ public class UserResource {
 		
 		return ResponseEntity.created(location).build();
 		
+	}
+	
+	@GetMapping("/users/{id}/posts")
+	public String retrieveAllPosts (@PathVariable int id) {
+		User user = service.findOne(id);
 		
+		if (user == null) {
+			throw new UserNotFoundException("id-" + id);
+		}
+		
+		return "Here we will have all posts for user-" + id;
+	}
+	
+	@PostMapping("/users/{id}/posts")
+	public String postNewPost (@PathVariable int id) {
+		
+		//User savedUser = service.saveUser(user);
+		
+		//return 201 CREATED and the path as response
+//		URI location = ServletUriComponentsBuilder
+//			.fromCurrentRequest()
+//			.path("/{id}")
+//			.buildAndExpand(savedUser.getId())
+//			.toUri();
+		
+		return "We will get a created response and the path for User-" + id;
+		
+	}
+	
+	@GetMapping("/users/{userId}/posts/{postId}")
+	public String retrieveOnePost (@PathVariable int userId, @PathVariable int postId) {
+		User user = service.findOne(userId);
+		
+		if (user == null) {
+			throw new UserNotFoundException("id-" + userId);
+		}
+		
+		return "Here we will see the details for post-" + postId +  " and user-" + userId;
 	}
 	
 

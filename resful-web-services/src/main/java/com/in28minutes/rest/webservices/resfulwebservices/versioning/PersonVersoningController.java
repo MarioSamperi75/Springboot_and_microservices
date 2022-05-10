@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PersonVersoningController {
-	// basic solution for versioning: use differents URLs
+	// URI VERSIONING
+	// basic solution for versioning: use differents URIs
 	@GetMapping("/v1/person")
 	public PersonV1 getPersonV1 () {
 		return new PersonV1("Mario Samperi");
@@ -18,7 +19,7 @@ public class PersonVersoningController {
 		return new PersonV2(new Name("Mario", "Samperi"));
 	}
 	
-	// basic solution for versioning: use different params
+	// REQUEST PARAMETER VERSIONING
 	// .../person/param?version=1
 	@GetMapping(value="/person/param", params="version=1")
 	public PersonV1 getPersonV1Param () {
@@ -30,7 +31,7 @@ public class PersonVersoningController {
 		return new PersonV2(new Name("Mario", "Samperi"));
 	}
 	
-	// basic solution for versioning: use different headers
+	//HEADER VERSIONING
 	// you should add the header in your request
 	@GetMapping(value="/person/header", headers="X-API-VERSION=1")
 	public PersonV1 getPersonV1Headers () {
@@ -39,6 +40,18 @@ public class PersonVersoningController {
 	
 	@GetMapping(value="/person/header", headers="X-API-VERSION=2")
 	public PersonV2 getPersonV2Headers () {
+		return new PersonV2(new Name("Mario", "Samperi"));
+	}
+	
+	//MEDIA TYPE VERSIONING- (also called "Content negotiation" or "Accept Header")
+	// you should add the produces specification in the Accept header
+	@GetMapping(value="/person/produces", produces="application/ms.company.app-v1+json")
+	public PersonV1 getPersonV1Produces () {
+		return new PersonV1("Mario Samperi");
+	}
+	
+	@GetMapping(value="/person/produces", produces="application/ms.company.app-v2+json")
+	public PersonV2 getPersonV2Produces () {
 		return new PersonV2(new Name("Mario", "Samperi"));
 	}
 

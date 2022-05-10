@@ -1,17 +1,22 @@
 package com.in28minutes.rest.webservices.resfulwebservices.filtering;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 // static filtering: you can't ignore field 1 in one scenario and field2 in another scenario
-//two way to filter: @JsonIgnoreProperties in the class or @JsonIgnore in the variable
+// two way to filter: @JsonIgnoreProperties in the class or @JsonIgnore in the variable
+// dynamic filtering configuration is managed in the controller
 
 //@JsonIgnoreProperties(value= {"field1", "field2"})
+
+// allows to configure dynamic filtering
+@JsonFilter("SomeBeanFilter")
 public class SomeBean {
 
 	private String field1;
 	private String field2;
-	@JsonIgnore
+	//@JsonIgnore
 	private String field3;
 
 	public SomeBean(String field1, String field2, String field3) {

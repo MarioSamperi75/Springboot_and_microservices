@@ -1,3 +1,5 @@
+// http://localhost:8080/swagger-ui/index.html to visualize the swagger OpenAPI definition
+
 package com.in28minutes.rest.webservices.resfulwebservices.user;
 
 import java.util.Date;

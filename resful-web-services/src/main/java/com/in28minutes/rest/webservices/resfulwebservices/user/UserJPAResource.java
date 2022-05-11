@@ -28,6 +28,9 @@ public class UserJPAResource {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private PostRepository postRepository;
+	
 	@GetMapping("/jpa/users")
 	public List<User> retrieveAllUsers() {
 		List<User> users = userRepository.findAll();
@@ -98,19 +101,27 @@ public class UserJPAResource {
 	}
 	
 	@PostMapping("/jpa/users/{id}/posts")
-	public String postNewPost (@PathVariable int id) {
+	public ResponseEntity<Object> createPost (@PathVariable int id, @RequestBody Post post) {
 		
-		//User savedUser = service.saveUser(user);
+		Optional<User> userOptional = userRepository.findById(id);
 		
-		//return 201 CREATED and the path as response
-//		URI location = ServletUriComponentsBuilder
-//			.fromCurrentRequest()
-//			.path("/{id}")
-//			.buildAndExpand(savedUser.getId())
-//			.toUri();
+		if (!userOptional.isPresent()) {
+			throw new UserNotFoundException("id-" + id);
+		}
 		
-		return "We will get a created response and the path for User-" + id;
+		User user = userOptional.get();
 		
+		post.setUser(user);
+		postRepository.save(post);
+	
+		URI location = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(post.getId())
+				.toUri();
+			
+			return ResponseEntity.created(location).build();
+	
 	}
 	
 	@GetMapping("/jpa/users/{userId}/posts/{postId}")

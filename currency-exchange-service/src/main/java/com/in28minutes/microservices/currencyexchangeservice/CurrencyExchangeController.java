@@ -1,3 +1,6 @@
+// to run the app in another port in Eclipse you can select runConfiguration, 
+// create a new configuration with -Dserver.port=8001 as VM argument 
+
 package com.in28minutes.microservices.currencyexchangeservice;
 
 import java.math.BigDecimal;

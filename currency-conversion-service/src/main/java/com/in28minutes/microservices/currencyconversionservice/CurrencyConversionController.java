@@ -25,7 +25,7 @@ public class CurrencyConversionController {
 		// we use rest template to send a rest request
 		// we get all in a CurrencyConversion class
 		// we need to map the path variables in an hashMap
-		// and extract the body from the responseentity
+		// and extract the body from the responsEntity
 		ResponseEntity<CurrencyConversion> responseEntity = new RestTemplate().getForEntity
 		("http://localhost:8000/currency-exchange/from/{from}/to/{to}", CurrencyConversion.class, uriVariables);
 		

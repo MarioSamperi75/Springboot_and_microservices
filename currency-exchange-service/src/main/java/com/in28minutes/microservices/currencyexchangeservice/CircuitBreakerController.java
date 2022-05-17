@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 
 @RestController
 public class CircuitBreakerController {
@@ -21,15 +20,20 @@ public class CircuitBreakerController {
 	
 	// CircuitBreaker stops sending request continuously if the server is down
 	// it keeps checking the server sometimes and "open" it again when/if the problem is solved
-	@CircuitBreaker(name="default", fallbackMethod = "hardCodedResponse")
+	//@CircuitBreaker(name="default", fallbackMethod = "hardCodedResponse")
+	
+	//RateLimiter - e.g.  1000 request allowed in 10s
+	@RateLimiter(name = "default")
 	@GetMapping("/sample-api")
-	public String simpleApi() {
+	public String sampleApi() {
 		
 		logger.info("Sample API call received");
 		//we just call a not existing URL to create an error
-		ResponseEntity<String> forEntity = new RestTemplate().getForEntity("http://localhost:8080/not-existing-url", String.class);
+//		ResponseEntity<String> forEntity = new RestTemplate().getForEntity("http://localhost:8080/not-existing-url", String.class);
+//		
+//		return forEntity.getBody();
+		return "Sample API";
 		
-		return forEntity.getBody();
 	}
 	
 	public String hardCodedResponse (Exception ex) {

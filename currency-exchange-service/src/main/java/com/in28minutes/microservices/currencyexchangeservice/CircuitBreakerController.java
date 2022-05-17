@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 
 @RestController
@@ -17,7 +17,11 @@ public class CircuitBreakerController {
 	//@Retry(name="default") 	// default is 3 times
 	
 	// you can configure sample-api in the properties a provide a fallback method
-	@Retry(name="sample-api", fallbackMethod = "hardCodedResponse") 	
+	//@Retry(name="sample-api", fallbackMethod = "hardCodedResponse") 
+	
+	// CircuitBreaker stops sending request continuously if the server is down
+	// it keeps checking the server sometimes and "open" it again when/if the problem is solved
+	@CircuitBreaker(name="default", fallbackMethod = "hardCodedResponse")
 	@GetMapping("/sample-api")
 	public String simpleApi() {
 		
